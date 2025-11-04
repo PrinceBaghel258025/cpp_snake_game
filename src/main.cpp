@@ -102,7 +102,7 @@ int main() {
     Snake snake = Snake(Point{max_x, max_y});
     bool game_over = false;
     Food food = Food(Point{max_x, max_y});
-    int frame_delay_ms = 1000;
+    int frame_delay_ms = 80;
     
    
     // std::cout << "Terminal size: " << max_y << "x" << max_x << std::endl;
@@ -146,8 +146,5 @@ int main() {
     
     // Cleanup
     endwin();
-    
-    std::cout << game_over << "Game over" << std::endl;
-    napms(2000);
     return 0;
 }
