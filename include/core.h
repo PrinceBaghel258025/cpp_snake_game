@@ -19,7 +19,7 @@ class Snake {
     std::deque<Point> body;
     Direction direction;
     public:
-        Snake();
+        Snake(Point screen_size);
         void grow();
         // appends to body at tail
         void move();
@@ -30,8 +30,9 @@ class Snake {
 };
 
 class Food {
+    Point screen_size;
     public:
-        Food();
+        Food(Point screen_size);
         // generate a random point
         Point pos; // saves food position
 
@@ -39,18 +40,5 @@ class Food {
         void generate_food(Snake snake); // generate a food position within boundry and don't overlap snake body
 };
 
-class Game {
-    // Main loop, collision detection, rendering, and input handling.
-    // draw border
-        // detect terminal width and height
-    // place food
-    // main loop
-        // handle input
-        // move snake
-        // detect collision
-        // render updated frame
-        // sleep (control speed)
-    // exit (ctrl + c) detect input    
-};
 
-bool hit_wall(Point snake_head);
+bool hit_wall(Point snake_head, int max_y, int max_x);

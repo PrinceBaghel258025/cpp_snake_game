@@ -50,24 +50,28 @@ void render(const Snake& snake, const Food& food) {
         mvaddch(y, max_x - 1, '|');
     }
     
-    // Draw corners
+    // // Draw corners
     mvaddch(0, 0, '+');
     mvaddch(0, max_x - 1, '+');
     mvaddch(max_y - 1, 0, '+');
     mvaddch(max_y - 1, max_x - 1, '+');
-    
+    // std::cout << "corner positions: " << 0 << "," << 0 << " " << 0 << "," << max_x - 1 << " " << max_y - 1 << "," << 0 << " " << max_y - 1 << "," << max_x - 1 << std::endl;
+
+
     // Draw snake body
     const auto& body = snake.get_body();
     for (size_t i = 0; i < body.size(); i++) {
         int y = body[i].y;
         int x = body[i].x;
-        std::cout << "Body segment: " << y << "," << x << std::endl;
+        // std::cout << "Body segment: " << y << "," << x << std::endl;
         
         // Make sure coordinates are within bounds
         if (y >= 1 && y < max_y - 1 && x >= 1 && x < max_x - 1) {
             if (i == 0) {
+                // std::cout << "Head: " << y << "," << x << std::endl;
                 mvaddch(y, x, '@'); // Head
             } else {
+                // std::cout << "Body: " << y << "," << x << std::endl;
                 mvaddch(y, x, 'o'); // Body
             }
         }
@@ -77,6 +81,7 @@ void render(const Snake& snake, const Food& food) {
     if (food.pos.y >= 1 && food.pos.y < max_y - 1 && 
         food.pos.x >= 1 && food.pos.x < max_x - 1) {
         mvaddch(food.pos.y, food.pos.x, '*');
+        // std::cout << "Food: " << food.pos.y << "," << food.pos.x << std::endl;
     }
     
     refresh();
@@ -90,19 +95,21 @@ int main() {
     keypad(stdscr, TRUE); // Enable function keys (arrow keys)
     nodelay(stdscr, TRUE); // Non-blocking input
     
-    // Initialize game
-    Snake snake = Snake();
-    bool game_over = false;
-    Food food = Food();
-    int frame_delay_ms = 1000;
     int max_y, max_x;
     getmaxyx(stdscr, max_y, max_x);
+
+    // Initialize game
+    Snake snake = Snake(Point{max_x, max_y});
+    bool game_over = false;
+    Food food = Food(Point{max_x, max_y});
+    int frame_delay_ms = 1000;
+    
    
-    std::cout << "Terminal size: " << max_y << "x" << max_x << std::endl;
+    // std::cout << "Terminal size: " << max_y << "x" << max_x << std::endl;
     Direction current_direction = RIGHT;
     
     // Initial render
-    render(snake, food);
+    // render(snake, food);
     
     // Game loop
     while (!game_over) {
@@ -125,7 +132,8 @@ int main() {
         }
         
         // Check for collisions
-        if (snake.collided_with_self() || hit_wall(snake.head())) {
+        if (snake.collided_with_self() || hit_wall(snake.head(), max_y, max_x)) {
+        // if ( hit_wall(snake.head(), max_y, max_x)) {
             game_over = true;
         }
         

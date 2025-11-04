@@ -5,16 +5,16 @@
 
 // Game boundaries (will be set by terminal size in Game class)
 // Using reasonable defaults for now
-static int game_width = 148;
-static int game_height = 40;
+// static int game_width = 148;
+// static int game_height = 40;
 
 // Snake implementation
-Snake::Snake() {
-    // Initialize snake with a body of 3 segments starting at center
+Snake::Snake(Point screen_size) {
     // start top left corner
-    body.push_back({0, 0});
-    body.push_back({1, 0});
-    body.push_back({2, 0});
+    // Body segments should extend opposite to initial direction
+    body.push_back({3, 2});
+    body.push_back({2, 2});
+    body.push_back({1, 2});
     direction = RIGHT;
 }
 
@@ -95,13 +95,16 @@ bool Snake::collided_with_self() {
 }
 
 // Food implementation
-Food::Food() {
+Food::Food(Point screen_size) {
     // Initialize with a default position
-    pos = {game_width / 2, game_height / 2};
+    this->screen_size = screen_size;
+    pos = {screen_size.x / 2, screen_size.y / 2};
 }
 
 void Food::generate_food(Snake snake) {
     // Initialize random seed if not already done
+    int game_width = screen_size.x;
+    int game_height = screen_size.y;
     static bool seeded = false;
     if (!seeded) {
         std::srand(std::time(nullptr));
@@ -133,7 +136,6 @@ void Food::generate_food(Snake snake) {
         attempts++;
     }
     
-    // If we couldn't find a valid position, return a default one
     // (shouldn't happen in normal gameplay)
     if (!valid_pos) {
         new_pos = {game_width / 2, game_height / 2};
@@ -143,11 +145,11 @@ void Food::generate_food(Snake snake) {
 }
 
 // Wall collision detection
-bool hit_wall(Point snake_head) {
+bool hit_wall(Point snake_head, int max_y, int max_x) {
     // Check if head is outside game boundaries
     // Assuming boundaries are 0 to game_width-1 and 0 to game_height-1
     // With 1-cell border: 1 to game_width-2 and 1 to game_height-2
-    return snake_head.x <= 0 || snake_head.x >= game_width - 1 ||
-           snake_head.y <= 0 || snake_head.y >= game_height - 1;
+    return snake_head.x <= 0 || snake_head.x >= max_x - 1 ||
+           snake_head.y <= 0 || snake_head.y >= max_y - 1;
 }
 
